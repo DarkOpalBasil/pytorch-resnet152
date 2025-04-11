@@ -9,7 +9,7 @@
 还使用了Flask Web框架搭建了一个小型的Web应用，运行在5000端口号上，可以在本地通过 http://localhost:5000/predict 的API调用模型，参数为 ‘POST请求 + form-data’;
 
 Web服务预测结果示意图：  
-<img width="300"/>https://github.com/DarkOpalBasil/pytorch-resnet152/data/corn_leaf/test/prediction_result.jpg
+<img width="300" src="https://github.com/DarkOpalBasil/pytorch-resnet152/blob/main/data/corn_leaf/test/prediction_result.jpg"/>
 
 ### 项目架构:   
 ```
