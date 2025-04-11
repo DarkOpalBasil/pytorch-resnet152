@@ -1,0 +1,14 @@
+torch~=2.3.1
+torchvision~=0.18.1
+pillow~=11.1.0
+flask~=3.1.0
+matplotlib
+numpy
+time
+warnings
+copy
+tqdm
+json
+PIL
+io
+os

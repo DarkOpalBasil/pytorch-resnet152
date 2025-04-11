@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  flask-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: model_api
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app/static:/app/static
+    restart: always
