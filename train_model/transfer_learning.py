@@ -66,8 +66,8 @@ for param in model_ft.parameters():
     param.requires_grad = True
 
 #设置输出层
-#设置那些层进行训练
-model_ft, input_size = utils.initialize_model(model_name, 7, feature_extract, use_pretrained=True)
+#设置那些层进行训练以及分类数
+model_ft, input_size = utils.initialize_model(model_name, 6, feature_extract, use_pretrained=True)
 #GPU还是CPU计算
 model_ft = model_ft.to(device)
 

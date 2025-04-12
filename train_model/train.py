@@ -100,8 +100,8 @@ print('-' * 10)
 
 #！！！调试模型！！！
 #设置输出层
-#设置那些层进行训练
-model_ft, input_size = utils.initialize_model(model_name, 7, feature_extract, use_pretrained=True)
+#设置那些层进行训练和分类数
+model_ft, input_size = utils.initialize_model(model_name, 6, feature_extract, use_pretrained=True)
 #GPU还是CPU计算
 model_ft = model_ft.to(device)
 #是否训练所有层
@@ -131,5 +131,5 @@ criterion = nn.CrossEntropyLoss() # 损失函数
 #！！！定义训练模型的函数！！！
 #模型、数据集、损失函数、优化器、迭代次数、保存文件
 ####！！！开始训练！！！####
-model_ft, val_acc_history, train_acc_history, valid_losses, train_losses, LRs = utils.train_model(model_ft, scheduler, device, dataloaders, criterion, optimizer_ft, 10, 'best.pt')
+model_ft, val_acc_history, train_acc_history, valid_losses, train_losses, LRs = utils.train_model(model_ft, scheduler, device, dataloaders, criterion, optimizer_ft, 30, 'best.pt')
 #最后保存模型为best.pt
