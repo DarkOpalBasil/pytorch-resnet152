@@ -86,5 +86,5 @@ model_ft.load_state_dict(checkpoint['state_dict'])
 #此处再次手动进行下一个训练过程时，注意这里的名称可以会因为引用而变化
 new_filename = 'transfer_learning_best.pt'
 print('\ntransfer_learning: ')
-model_ft, val_acc_history, train_acc_history, valid_losses, train_losses, LRs = utils.train_model(model_ft, scheduler, device, dataloaders, criterion, optimizer_ft, 10, new_filename)
+model_ft, val_acc_history, train_acc_history, valid_losses, train_losses, LRs = utils.train_model(model_ft, scheduler, device, dataloaders, criterion, optimizer_ft, 50, new_filename)
 ##最后保存模型为transfer_learning_best.pt
