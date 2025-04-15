@@ -49,7 +49,7 @@ else:
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # 加载训练好的模型
-model_ft, input_size = utils.initialize_model(model_name, 5, feature_extract, use_pretrained=True)
+model_ft, input_size = utils.initialize_model(model_name, 6, feature_extract, use_pretrained=True)
 # GPU模式
 model_ft = model_ft.to(device)
 # 加载模型

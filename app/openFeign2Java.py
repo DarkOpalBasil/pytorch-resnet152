@@ -37,7 +37,7 @@ else:
     print('Running on CPU')
 
 # 初始化模型，使用 utils 文件的 initialize_model
-model_ft, input_size = utils.initialize_model(model_name, 5, feature_extract, use_pretrained=True)
+model_ft, input_size = utils.initialize_model(model_name, 6, feature_extract, use_pretrained=True)
 model_ft = model_ft.to(device)
 
 # 加载权重
