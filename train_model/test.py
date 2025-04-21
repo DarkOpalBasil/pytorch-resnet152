@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 plt.show()
 import numpy as np
+import torch.nn.functional as F
 import torch
 from torch.utils.data import DataLoader
 from torchvision import transforms, datasets
@@ -66,6 +67,18 @@ else:
     output = model_ft(images)
 #查看测试集大小
 print(output.shape)
+
+print("每张图像的 Softmax 概率数组：")
+for n in range(output.size(0)):
+    logits = output[n]  # 取第n个样本的输出
+    probs = F.softmax(logits, dim=0)  # 做Softmax归一化
+    probs_np = probs.detach().cpu().numpy() if train_on_gpu else probs.detach().numpy()
+
+    # 输出格式化打印
+    print(f"样本 {n + 1} 的概率分布: {', '.join([f'{p:.4f}' for p in probs_np])}")
+    pred_class = np.argmax(probs_np)
+    pred_prob = probs_np[pred_class]
+    print(f"预测类别索引: {pred_class}；概率: {pred_prob:.4f}（对应类别: {cat_to_name[str(pred_class + 1)]}）\n")
 
 _, preds_tensor = torch.max(output, 1)
 preds = np.squeeze(preds_tensor.numpy()) if not train_on_gpu else np.squeeze(preds_tensor.cpu().numpy())

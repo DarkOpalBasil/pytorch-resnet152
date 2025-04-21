@@ -47,7 +47,7 @@ model_ft.eval()
 
 # 4. 图像预测函数
 def predict_image(image_bytes):
-    """对单张图片进行预测"""
+    """对单张图片进行预测，并返回 Softmax 概率数组"""
     try:
         image = Image.open(io.BytesIO(image_bytes)).convert('RGB')
         image = data_transforms(image).unsqueeze(0).to(device)  # 加入 batch 维度
@@ -55,18 +55,22 @@ def predict_image(image_bytes):
         # 预测图像
         with torch.no_grad():
             output = model_ft(image)
+            probs = torch.nn.functional.softmax(output[0], dim=0)  # output[0] 是去掉 batch 维度后的 logits
             _, preds_tensor = torch.max(output, 1)
 
         # 转换为 numpy 数据
         preds = np.squeeze(preds_tensor.cpu().numpy()) if train_on_gpu else np.squeeze(preds_tensor.numpy())
         class_id = preds + 1  # +1 因为是从 0 开始
-
-        # 返回预测结果
         class_name = cat_to_name[str(class_id)]
-        return class_id, class_name
+
+        # Softmax 转换为概率数组（保留4位小数）
+        softmax_list = probs.detach().cpu().numpy() if train_on_gpu else probs.detach().numpy()
+        softmax_list = [round(float(p), 4) for p in softmax_list]
+
+        return class_id, class_name, softmax_list
 
     except Exception as e:
-        return str(e), None
+        return str(e), None, []
 
 # 5. 生成预测结果可视化
 def visualize_prediction(image_bytes, class_name):
@@ -99,7 +103,7 @@ def predict_route():
     image_bytes = file.read()
 
     # 进行预测
-    class_id, class_name = predict_image(image_bytes)
+    class_id, class_name, softmax_list = predict_image(image_bytes)
     if class_name is None:
         return jsonify({'error': 'Error processing image'}), 500
 
@@ -110,6 +114,7 @@ def predict_route():
     result = {
         'class_id': int(class_id),
         'class_name': class_name,
+        'softmax_list': softmax_list,
         'result_image_url': result_image_path
     }
     return jsonify(result)
