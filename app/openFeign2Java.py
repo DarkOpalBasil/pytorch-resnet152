@@ -1,5 +1,6 @@
 import io
 import json
+import os
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -36,14 +37,38 @@ if train_on_gpu:
 else:
     print('Running on CPU')
 
-# 初始化模型，使用 utils 文件的 initialize_model
-model_ft, input_size = utils.initialize_model(model_name, 6, feature_extract, use_pretrained=True)
-model_ft = model_ft.to(device)
+# # 初始化模型，使用 utils 文件的 initialize_model
+# model_ft, input_size = utils.initialize_model(model_name, 6, feature_extract, False)
+# model_ft = model_ft.to(device)
+# # 加载权重
+# checkpoint = torch.load('best.pt', map_location=device)
+# # 默认本地路径导入
+# model_ft.load_state_dict(checkpoint['state_dict'])
+# model_ft.eval()
 
-# 加载权重
-checkpoint = torch.load('best.pt', map_location=device)
-model_ft.load_state_dict(checkpoint['state_dict'])
-model_ft.eval()
+try:
+    # 1. 初始化模型结构（从 utils 中加载 ResNet152，并本地加载预训练参数）
+    model_ft, input_size = utils.initialize_model(model_name, 6, feature_extract, False)
+    model_ft = model_ft.to(device)
+
+    # 2. 加载你训练好的权重 best.pt（包含 classifier 部分）
+    if not os.path.exists('best.pt'):
+        raise FileNotFoundError("X没找到 best.pt 权重文件，请检查路径！")
+
+    checkpoint = torch.load('best.pt', map_location=device)
+
+    # 尝试从 checkpoint 中加载权重
+    if 'state_dict' in checkpoint:
+        model_ft.load_state_dict(checkpoint['state_dict'])
+    else:
+        model_ft.load_state_dict(checkpoint)
+
+    model_ft.eval()
+    print("V模型加载成功！")
+except Exception as e:
+    print(f"X模型加载失败: {e}")
+    import sys
+    sys.exit(1)
 
 # 4. 图像预测函数
 def predict_image(image_bytes):
@@ -123,7 +148,7 @@ def predict_route():
 @app.route('/static/<path:filename>')
 def serve_static(filename):
     """访问静态图片"""
-    return send_file(f'project/static/{filename}')
+    return send_file(f'./static/{filename}')
 
 # 8. 启动 Flask 服务
 if __name__ == '__main__':

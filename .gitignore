@@ -18,7 +18,7 @@ data/corn_leaf/valid/7/**/*
 
 # 忽略 acc_model 下面我训练的模型
 acc_model/**
-!acc_model/original_model/
+!app/original_model/
 # !acc_model/original_model/**
 
 # Large files 无法上传，我自己训练的模型以及原始模型，请移步Google云盘链接

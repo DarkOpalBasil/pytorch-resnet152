@@ -1,3 +1,5 @@
+import os
+
 import matplotlib.pyplot as plt
 plt.show()
 import numpy as np
@@ -27,13 +29,30 @@ def set_parameter_requires_grad(model, feature_extracting):
         for params in model.parameters():
             params.requires_grad = False #不计算反向传播梯度,不更新参数
 
-#设置输出层的函数
-def initialize_model(model_name, num_classes, feature_extract, use_pretrained=True):
+#本地修改路径导入模型
+def load_model(use_pretrained):
+    # 检查官网源，use_pretrained=True自动下载，use_pretrained=False使用本地源
     model_ft = models.resnet152(pretrained=use_pretrained)
+    model_cache_path = "./original_model/resnet152-394f9c45.pth"
+    if use_pretrained:
+        print("Loading Online models")
+        model_ft = models.resnet152(pretrained=use_pretrained)
+    else:
+        print("Loading Local models")
+        if not os.path.exists(model_cache_path):
+            raise FileNotFoundError(f"预训练模型未找到于 {model_cache_path}")
+        # 加载本地权重
+        state_dict = torch.load(model_cache_path, map_location='cpu')
+        model_ft.load_state_dict(state_dict)
+    return model_ft
+
+#设置输出层的函数
+def initialize_model(model_name, num_classes, feature_extract, use_pretrained):
+    model_ft = load_model(use_pretrained)
     set_parameter_requires_grad(model_ft, feature_extract)
     num_ftrs = model_ft.fc.in_features
     model_ft.fc=nn.Linear(num_ftrs, num_classes) # 类别数自己根据自己任务来
-    input_size=64#输入大小根据自己配置来
+    input_size=64 # 输入大小根据自己配置来
     return model_ft, input_size
 
 #训练模型函数

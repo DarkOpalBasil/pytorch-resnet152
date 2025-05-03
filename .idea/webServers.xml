@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="d16a0017-3e0f-4f01-a55d-801538441358" name="wx">
+        <fileTransfer rootFolder="/root/py" accessType="SFTP" host="150.158.18.44" port="22" sshConfigId="4cfd3140-f320-4696-be17-3469b4c6f56d" sshConfig="root@150.158.18.44:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
